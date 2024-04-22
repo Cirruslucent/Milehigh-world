@@ -48,3 +48,21 @@ jobs:
         workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
         service_account: 'my-service-account@my-project.iam.gserviceaccount.com'
 
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: prometheus
+spec:
+  replicas: 1
+  version: v2.29.2
+  serviceAccountName: prometheus-k8s
+  serviceMonitorSelector: {}
+  resources:
+    requests:
+      memory: 400Mi
+  enableAdminAPI: false
+  securityContext:
+    fsGroup: 2000
+  ruleSelector:
+    matchLabels:
+      prometheus: k8s
