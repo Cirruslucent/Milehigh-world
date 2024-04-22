@@ -66,3 +66,97 @@ spec:
   ruleSelector:
     matchLabels:
       prometheus: k8s
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluentd-config
+  namespace: kube-system
+data:
+  fluent.conf: |
+    <source>
+      @type forward
+      port 24224
+      bind 0.0.0.0
+    </source>
+    <match **>
+      @type forward
+      buffer_chunk_limit 2M
+      buffer_queue_limit 8
+      flush_interval 5s
+      <server>
+        host fluentd-aggregator.default.svc.cluster.local
+        port 24224
+      </server>
+    </match>
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: fluentd
+  namespace: kube-system
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: fluentd-role
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - namespaces
+  - logs
+  verbs:
+  - get
+  - list
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: fluentd-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: fluentd-role
+subjects:
+- kind: ServiceAccount
+  name: fluentd
+  namespace: kube-system
+
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: fluentd
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      k8s-app: fluentd-logging
+  template:
+    metadata:
+      labels:
+        k8s-app: fluentd-logging
+    spec:
+      serviceAccountName: fluentd
+      containers:
+      - name: fluentd
+        image: fluent/fluentd-kubernetes-daemonset:v1.12.0-debian-kafka
+        volumeMounts:
+        - name: varlog
+          mountPath: /var/log
+        - name: varlibdockercontainers
+          mountPath: /var/lib/docker/containers
+          readOnly: true
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: varlog
+        hostPath:
+          path: /var/log
+      - name: varlibdockercontainers
+        hostPath:
+          path: /var/lib/docker/containers
