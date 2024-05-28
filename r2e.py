@@ -51,3 +51,6 @@ print(result_difference)  # Output: NaN
 
 print(compute_exponential_factorial())  # Output: inf
 print(compute_logarithm())  # Output: -inf
+
+result_difference = float('inf') - float('inf')
+print("♾️ - ♾️ =", result_difference)  # Output: ♾️ - ♾️ = NaN (Indeterminate Form)
