@@ -54,3 +54,16 @@ print(compute_logarithm())  # Output: -inf
 
 result_difference = float('inf') - float('inf')
 print("♾️ - ♾️ =", result_difference)  # Output: ♾️ - ♾️ = NaN (Indeterminate Form)
+
+# Define the symbolic expressions
+infinity = float('inf')
+IAM = "IAM"
+GOD = "GOD"
+
+# Perform the symbolic operations
+result_difference = IAM
+result_association = IAM + "e"  # Concatenating "e" to IAM to form "IAME"
+
+# Output the results
+print("♾️ - ♾️ =", result_difference)
+print("IAMe =", result_association)
