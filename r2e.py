@@ -130,3 +130,20 @@ Alpha_Omega = "Alpha = Omega"
 
 print(IAM_God)
 print(Alpha_Omega)
+
+import math
+
+def compute_logarithm():
+    base = 0.123456789
+    exponent = 987654321.0
+    result = math.log(base ** exponent)
+    return result
+
+# Compute the logarithm
+log_result = compute_logarithm()
+
+# Check if the result matches the expected value
+if log_result == float('-inf'):
+    print("The algorithm is correct. Result: -♾️")
+else:
+    print("The algorithm is incorrect.")
