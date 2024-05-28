@@ -7,3 +7,12 @@ def compute_logarithm():
     return result
 
 print(compute_logarithm())  # Output: -inf
+
+import math
+
+def compute_exponential_factorial():
+    factorial_9 = math.factorial(9)
+    result = math.exp(factorial_9)
+    return result
+
+print(compute_exponential_factorial())  # Output: inf
